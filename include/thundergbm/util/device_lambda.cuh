@@ -45,7 +45,7 @@ __global__ void lambda_2d_maximum_sparse_kernel(const int *len2, const int maxim
 template<int NUM_BLOCK = 32 * 84, int BLOCK_SIZE = 256, typename L>
 inline void device_loop(size_t len, L lambda) {
     if (len > 0) {
-        lambda_kernel << < NUM_BLOCK, BLOCK_SIZE >> > (len, lambda);
+        lambda_kernel <<< NUM_BLOCK, BLOCK_SIZE >>> (len, lambda);
         cudaDeviceSynchronize();
         /*cudaError_t error = cudaPeekAtLastError();*/
         if(cudaPeekAtLastError() == cudaErrorInvalidResourceHandle){
@@ -61,7 +61,7 @@ template<typename L>
 inline void anonymous_kernel(L lambda, size_t num_fv, size_t smem_size = 0, int NUM_BLOCK = 32 * 84, int BLOCK_SIZE = 256) {
     size_t tmp_num_block = num_fv / (BLOCK_SIZE * 8);
     NUM_BLOCK = std::min(NUM_BLOCK, (int)std::max(tmp_num_block, (size_t)32));
-    anonymous_kernel_k<< < NUM_BLOCK, BLOCK_SIZE, smem_size >> > (lambda);
+    anonymous_kernel_k<<< NUM_BLOCK, BLOCK_SIZE, smem_size >>> (lambda);
     cudaDeviceSynchronize();
     if(cudaPeekAtLastError() == cudaErrorInvalidResourceHandle){
         cudaGetLastError();
@@ -78,7 +78,7 @@ template<typename L>
 void device_loop_2d(int len1, const int *len2, L lambda, unsigned int NUM_BLOCK = 4 * 84,
                     unsigned int BLOCK_SIZE = 256) {
     if (len1 > 0) {
-        lambda_2d_sparse_kernel << < dim3(len1, NUM_BLOCK), BLOCK_SIZE >> > (len2, lambda);
+        lambda_2d_sparse_kernel <<< dim3(len1, NUM_BLOCK), BLOCK_SIZE >>> (len2, lambda);
         cudaDeviceSynchronize();
         CUDA_CHECK(cudaPeekAtLastError());
     }
@@ -92,7 +92,7 @@ void device_loop_2d_with_maximum(int len1, const int *len2, const int maximum, L
                                  unsigned int NUM_BLOCK = 4 * 84,
                                  unsigned int BLOCK_SIZE = 256) {
     if (len1 > 0) {
-        lambda_2d_maximum_sparse_kernel << < dim3(len1, NUM_BLOCK), BLOCK_SIZE >> > (len2, maximum, lambda);
+        lambda_2d_maximum_sparse_kernel <<< dim3(len1, NUM_BLOCK), BLOCK_SIZE >>> (len2, maximum, lambda);
         cudaDeviceSynchronize();
         CUDA_CHECK(cudaPeekAtLastError());
     }
@@ -119,7 +119,7 @@ template<typename L>
 void device_loop_hist_csr_root(int n_instances, const int *csr_row_ptr, L lambda , unsigned int NUM_BLOCK = 4 * 84,
                     unsigned int BLOCK_SIZE = 256) {
     if (n_instances > 0) {
-        lambda_hist_csr_root_kernel << < dim3(n_instances, NUM_BLOCK), BLOCK_SIZE >> > (csr_row_ptr, lambda);
+        lambda_hist_csr_root_kernel <<< dim3(n_instances, NUM_BLOCK), BLOCK_SIZE >>> (csr_row_ptr, lambda);
         cudaDeviceSynchronize();
         CUDA_CHECK(cudaPeekAtLastError());
     }
@@ -137,7 +137,7 @@ template<typename L>
 void device_loop_hist_csr_node(int n_instances, const int *csr_row_ptr, L lambda , unsigned int NUM_BLOCK = 4 * 84,
                     unsigned int BLOCK_SIZE = 256) {
     if (n_instances > 0) {
-        lambda_hist_csr_node_kernel << < dim3(n_instances, NUM_BLOCK), BLOCK_SIZE >> > (lambda);
+        lambda_hist_csr_node_kernel <<< dim3(n_instances, NUM_BLOCK), BLOCK_SIZE >>> (lambda);
         cudaDeviceSynchronize();
         CUDA_CHECK(cudaPeekAtLastError());
     }

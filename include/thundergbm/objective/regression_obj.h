@@ -7,6 +7,7 @@
 
 #include "objective_function.h"
 #include "thundergbm/util/device_lambda.cuh"
+#include "thundergbm/util/cub_wrapper.h"
 #include "thrust/reduce.h"
 
 template<template<typename> class Loss>
@@ -38,7 +39,7 @@ public:
         get_gradient(y,y_p,gh_pair);
 
         //get sum gh_pair
-        GHPair sum_gh = thrust::reduce(thrust::cuda::par, gh_pair.device_data(), gh_pair.device_end());
+        GHPair sum_gh = thrust::reduce(EXEC_POLICY, gh_pair.device_data(), gh_pair.device_end());
 
         //get weight
         float weight =  -sum_gh.g / fmax(sum_gh.h, (double)(1e-6));
@@ -98,7 +99,7 @@ public:
         get_gradient(y,y_p,gh_pair);
 
         //get sum gh_pair
-        GHPair sum_gh = thrust::reduce(thrust::cuda::par, gh_pair.device_data(), gh_pair.device_end());
+        GHPair sum_gh = thrust::reduce(EXEC_POLICY, gh_pair.device_data(), gh_pair.device_end());
 
         //get weight
         float weight =  -sum_gh.g / fmax(sum_gh.h, (double)(1e-6));

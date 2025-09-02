@@ -33,6 +33,9 @@ GBDTs and Random Forests are often used for creating state-of-the-art data scien
 - Owen Zhang, 1st place, [Avito Context Ad Clicks competition](https://www.kaggle.com/c/avito-context-ad-clicks), [Kaggle interview](http://blog.kaggle.com/2015/08/26/avito-winners-interview-1st-place-owen-zhang/).
 - Keiichi Kuroyanagi, 2nd place, [Airbnb New User Bookings](https://www.kaggle.com/c/airbnb-recruiting-new-user-bookings), [Kaggle interview](http://blog.kaggle.com/2016/03/17/airbnb-new-user-bookings-winners-interview-2nd-place-keiichi-kuroyanagi-keiku/).
 
+## Getting Started on ROCm
+ThunderGBM is enabled and optimised for ROCm software which enables the library to run on AMD Instinct GPUs. For details on installation on ROCm refer to the [ROCm Documentation](https://rocm.docs.amd.com/projects/thundergbm/en/latest/). 
+
 ## Getting Started
 
 ### Prerequisites

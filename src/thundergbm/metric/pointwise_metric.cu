@@ -3,6 +3,7 @@
 //
 #include "thrust/reduce.h"
 #include "thundergbm/util/device_lambda.cuh"
+#include "thundergbm/util/cub_wrapper.h"
 #include "thundergbm/metric/pointwise_metric.h"
 
 float_type RMSE::get_score(const SyncArray<float_type> &y_p) const {
@@ -17,7 +18,7 @@ float_type RMSE::get_score(const SyncArray<float_type> &y_p) const {
         sq_err_data[i] = e * e;
     });
     float_type rmse =
-            sqrtf(thrust::reduce(thrust::cuda::par, sq_err.device_data(), sq_err.device_end()) / n_instances);
+            sqrtf(thrust::reduce(EXEC_POLICY, sq_err.device_data(), sq_err.device_end()) / n_instances);
     return rmse;
 }
 

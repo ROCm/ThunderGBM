@@ -11,6 +11,10 @@
 #include "config.h"
 #include "thrust/tuple.h"
 
+#include <thrust/execution_policy.h>
+#include <thrust/scan.h>
+#include <thrust/host_vector.h>
+
 using std::vector;
 using std::string;
 
@@ -24,6 +28,50 @@ LOG(FATAL)<<"Cannot use GPU when compiling without GPU"
     cudaError_t error = condition; \
     CHECK_EQ(error, cudaSuccess) << " " << cudaGetErrorString(error); \
   } while (false)
+
+#define CubDebug(e) cub::Debug((cudaError_t) (e), __FILE__, __LINE__)
+#if defined(__HIP_PLATFORM_AMD__)
+
+// Check if compiling for the device (GPU) or host (CPU)
+#ifdef __HIP_DEVICE_COMPILE__
+
+//
+// DEVICE-SIDE IMPLEMENTATION
+// This version is used inside __global__ or __device__ functions.
+//
+#define _CubLog(format, ...)                                                   \
+  do                                                                           \
+  {                                                                            \
+    /* On device, prepend block and thread IDs to the output.                 */ \
+    /* Note: hipBlockIdx/hipThreadIdx are of type uint3, so %u is appropriate.*/ \
+    printf("[block (%u,%u,%u), thread (%u,%u,%u)]: " format,                    \
+           hipBlockIdx_z,                                                      \
+           hipBlockIdx_y,                                                      \
+           hipBlockIdx_x,                                                      \
+           hipThreadIdx_z,                                                     \
+           hipThreadIdx_y,                                                     \
+           hipThreadIdx_x,                                                     \
+           __VA_ARGS__);                                                       \
+  } while (false)
+
+#else // !__HIP_DEVICE_COMPILE__
+
+//
+// HOST-SIDE IMPLEMENTATION
+// This version is used in standard host code.
+//
+#define _CubLog(format, ...)                                                   \
+  do                                                                           \
+  {                                                                            \
+    /* On host, just a standard printf is needed. */                           \
+    printf(format, __VA_ARGS__);                                               \
+  } while (false)
+
+#endif // __HIP_DEVICE_COMPILE__
+
+#endif // __HIP_PLATFORM_AMD__
+
+
 
 //https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
 template<typename ... Args>
