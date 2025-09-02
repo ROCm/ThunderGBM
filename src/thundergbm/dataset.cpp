@@ -6,8 +6,14 @@
 #include <thundergbm/objective/objective_function.h>
 //#include <array>
 #include "thundergbm/dataset.h"
+#ifndef USE_ROCM
 #include "thrust/scan.h"
 #include "thrust/execution_policy.h"
+#include "thrust/host_vector.h#
+#else
+#include <hip/hip_runtime.h>
+#include <rocprim/rocprim.hpp>
+#endif
 
 size_t DataSet::n_features() const {
     return n_features_;

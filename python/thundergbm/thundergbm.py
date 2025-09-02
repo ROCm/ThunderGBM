@@ -8,11 +8,28 @@ import statistics
 
 from sklearn.utils import check_X_y
 
+import ctypes
+from ctypes.util import find_library
 from ctypes import *
 from os import path
 from sys import platform
 
+omp_lib_name = find_library('omp') 
+
+if omp_lib_name:
+    # Use RTLD_NOW to resolve all symbols immediately, and RTLD_GLOBAL
+    # to make them available for subsequent libraries.
+    try:
+        ctypes.CDLL(omp_lib_name, mode=ctypes.RTLD_GLOBAL | ctypes.RTLD_NOW)
+        print(f"Successfully pre-loaded OpenMP globally: {omp_lib_name}")
+    except Exception as e:
+        # If this load fails, print the error but continue, as the system linker 
+        # might still be required to load it for the dependency.
+        print(f"Warning: Failed to pre-load OpenMP with RTLD_GLOBAL: {e}")
+        pass
+
 dirname = path.dirname(path.abspath(__file__))
+
 
 if platform == "linux" or platform == "linux2":
     shared_library_name = "libthundergbm.so"
@@ -29,7 +46,7 @@ else:
     lib_path = path.join(dirname, "../../build/lib", shared_library_name)
 # print(lib_path)
 if path.exists(lib_path):
-    thundergbm = CDLL(lib_path)
+    thundergbm = CDLL(lib_path, mode=ctypes.RTLD_GLOBAL)
 else:
     raise RuntimeError("Please build the library first!")
 

@@ -6,8 +6,14 @@
 #define THUNDERGBM_CUB_UTIL_H
 
 #include <thundergbm/syncarray.h>
-#include "cub/cub.cuh"
 #include "thrust/sort.h"
+
+#ifndef USE_ROCM
+#include "cub/cub.cuh"
+#define EXEC_POLICY thrust::cuda::par
+#else
+#define EXEC_POLICY thrust::hip::par
+#endif
 
 template<typename T1, typename T2>
 void cub_sort_by_key(SyncArray<T1> &keys, SyncArray<T2> &values, int size = -1, bool ascending = true,

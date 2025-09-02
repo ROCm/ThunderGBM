@@ -8,8 +8,13 @@
 #include "thundergbm/common.h"
 #include "thundergbm/sparse_columns.h"
 #include "thundergbm/builder/shard.h"
-#include "cusparse.h"
 #include "thundergbm/dataset.h"
+#include "rocm_includes.h"
+
+#ifndef USE_ROCM
+#include "cusparse.h"
+#endif
+
 
 class CSR2CSCTest : public ::testing::Test {
 public:
@@ -122,9 +127,15 @@ protected:
         csc_row_idx2.resize(nnz);
         csc_col_ptr2.resize(n_column + 1);
 
+    size_t buffer_size = 0;
+    SyncArray<char> tmp_buffer(buffer_size);
         cusparseScsr2csc(handle, dataset.n_instances(), n_column, nnz, val.device_data(), row_ptr.device_data(),
                          col_idx.device_data(), csc_val2.device_data(), csc_row_idx2.device_data(), csc_col_ptr2.device_data(),
-                         CUSPARSE_ACTION_NUMERIC, CUSPARSE_INDEX_BASE_ZERO);
+                         CUSPARSE_ACTION_NUMERIC, CUSPARSE_INDEX_BASE_ZERO
+#ifdef USE_ROCM
+					,tmp_buffer.device_data()
+#endif
+);
         cudaDeviceSynchronize();
         cusparseDestroy(handle);
         cusparseDestroyMatDescr(descr);

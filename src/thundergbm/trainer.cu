@@ -2,7 +2,9 @@
 // Created by zeyi on 1/9/19.
 //
 #include <fstream>
+#ifndef USE_ROCM
 #include "cuda_runtime_api.h"
+#endif
 
 #include <thundergbm/tree.h>
 #include <thundergbm/trainer.h>

@@ -13,7 +13,11 @@
 #include "thundergbm/util/multi_device.h"
 
 #include "omp.h"
+
+#ifndef USE_ROCM
 #include "cusparse.h"
+#endif
+
 #include <chrono>
 #include<iostream>
 typedef std::chrono::high_resolution_clock Clock;
@@ -254,7 +258,7 @@ void HistTreeBuilder_single::find_split(int level, int device_id) {
                         
 
 
-                        inclusive_scan_by_key(cuda::par, hist_fid, hist_fid + n_bins,
+                        inclusive_scan_by_key(EXEC_POLICY, hist_fid, hist_fid + n_bins,
                                       hist.device_data(), hist.device_data());
 
                         { //missing 
@@ -337,7 +341,7 @@ void HistTreeBuilder_single::find_split(int level, int device_id) {
                             auto nid_iterator = make_transform_iterator(counting_iterator<int>(0), placeholders::_1 / n_bins);
 
                             reduce_by_key(
-                                    cuda::par,
+                                    EXEC_POLICY,
                                     nid_iterator, nid_iterator + n_split,
                                     make_zip_iterator(make_tuple(counting_iterator<int>(0), gain.device_data())),
                                     make_discard_iterator(),
@@ -400,15 +404,15 @@ void HistTreeBuilder_single::find_split(int level, int device_id) {
                             TIMED_SCOPE(timerObj, "data partitioning");
                             SyncArray<int> nid4sort(n_instances);
                             nid4sort.copy_from(ins2node_id[device_id]);
-                            sequence(cuda::par, node_idx.device_data(), node_idx.device_end(), 0);
+                            sequence(EXEC_POLICY, node_idx.device_data(), node_idx.device_end(), 0);
 
                             cub_sort_by_key(nid4sort, node_idx);
                             auto counting_iter = make_counting_iterator < int > (nid_offset);
                             node_ptr.host_data()[0] =
-                                    lower_bound(cuda::par, nid4sort.device_data(), nid4sort.device_end(), nid_offset) -
+                                    lower_bound(EXEC_POLICY, nid4sort.device_data(), nid4sort.device_end(), nid_offset) -
                                     nid4sort.device_data();
 
-                            upper_bound(cuda::par, nid4sort.device_data(), nid4sort.device_end(), counting_iter,
+                            upper_bound(EXEC_POLICY, nid4sort.device_data(), nid4sort.device_end(), counting_iter,
                                         counting_iter + n_nodes_in_level, node_ptr.device_data() + 1);
                             LOG(DEBUG) << "node ptr = " << node_ptr;
                             cudaDeviceSynchronize();
@@ -611,7 +615,7 @@ void HistTreeBuilder_single::find_split(int level, int device_id) {
                             cudaDeviceSynchronize();
                             
                             TSTART(evaluate)
-                            inclusive_scan_by_key(cuda::par, hist_fid, hist_fid + 2*n_bins,
+                            inclusive_scan_by_key(EXEC_POLICY, hist_fid, hist_fid + 2*n_bins,
                                         hist.device_data(), 
                                         hist.device_data());
 
@@ -694,7 +698,7 @@ void HistTreeBuilder_single::find_split(int level, int device_id) {
                                 auto nid_iterator = make_transform_iterator(counting_iterator<int>(0), placeholders::_1 / n_bins);
 
                                 reduce_by_key(
-                                        cuda::par,
+                                        EXEC_POLICY,
                                         nid_iterator, nid_iterator + 2*n_bins,
                                         make_zip_iterator(make_tuple(counting_iterator<int>(0), gain.device_data())),
                                         make_discard_iterator(),

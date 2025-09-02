@@ -4,13 +4,14 @@
 #include "thundergbm/builder/shard.h"
 #include "thrust/sequence.h"
 #include "thundergbm/util/device_lambda.cuh"
+#include "thundergbm/util/cub_wrapper.h"
 
 void Shard::column_sampling(float rate) {
     if (rate < 1) {
         CHECK_GT(rate, 0);
         int n_column = columns.n_column;
         SyncArray<int> idx(n_column);
-        thrust::sequence(thrust::cuda::par, idx.device_data(), idx.device_end(), 0);
+        thrust::sequence(EXEC_POLICY, idx.device_data(), idx.device_end(), 0);
         std::random_shuffle(idx.host_data(), idx.host_data() + n_column);
         int sample_count = max(1, int(n_column * rate));
         ignored_set.resize(n_column);

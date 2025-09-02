@@ -3,6 +3,7 @@
 //
 #include "thundergbm/metric/multiclass_metric.h"
 #include "thundergbm/util/device_lambda.cuh"
+#include "thundergbm/util/cub_wrapper.h"
 #include "thrust/reduce.h"
 
 
@@ -26,7 +27,7 @@ float_type MulticlassAccuracy::get_score(const SyncArray<float_type> &y_p) const
         is_true_data[i] = max_k == y_data[i];
     });
 
-    float acc = thrust::reduce(thrust::cuda::par, is_true_data, is_true_data + n_instances) / (float) n_instances;
+    float acc = thrust::reduce(EXEC_POLICY, is_true_data, is_true_data + n_instances) / (float) n_instances;
     return acc;
 }
 
@@ -41,6 +42,6 @@ float_type BinaryClassMetric::get_score(const SyncArray<float_type> &y_p) const 
         is_true_data[i] = max_k == y_data[i];
     });
 
-    float acc = thrust::reduce(thrust::cuda::par, is_true_data, is_true_data + n_instances) / (float) n_instances;
+    float acc = thrust::reduce(EXEC_POLICY, is_true_data, is_true_data + n_instances) / (float) n_instances;
     return 1 - acc;
 }

@@ -3,6 +3,7 @@
 //
 #include "thundergbm/tree.h"
 #include "thundergbm/util/device_lambda.cuh"
+#include "thundergbm/util/cub_wrapper.h"
 #include "thrust/reduce.h"
 
 void Tree::init2(const SyncArray<GHPair> &gradients, const GBMParam &param) {
@@ -28,7 +29,7 @@ void Tree::init2(const SyncArray<GHPair> &gradients, const GBMParam &param) {
     });
 
     //init root node
-    GHPair sum_gh = thrust::reduce(thrust::cuda::par, gradients.device_data(), gradients.device_end());
+    GHPair sum_gh = thrust::reduce(EXEC_POLICY, gradients.device_data(), gradients.device_end());
     float_type lambda = param.lambda;
     device_loop<1, 1>(1, [=]__device__(int i) {
         Tree::TreeNode &root_node = node_data[0];
