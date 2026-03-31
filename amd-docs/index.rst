@@ -44,4 +44,4 @@ ROCm-Finance ThunderGBM documentation is organized into the following categories
 
    .. grid-item-card:: Tutorial
 
-      * `Examples (GitHub) <https://github.com/ROCm/rocm-finance/tree/main/examples/thundergbm>`__
+      * `Examples (GitHub) <https://github.com/ROCm/rocm-finance/tree/release/26.01/examples/thundergbm>`__
