@@ -22,7 +22,7 @@ subtrees:
         title: Documentation (upstream)
   - caption: Tutorial
     entries:
-      - url: https://github.com/ROCm/rocm-finance/tree/${branch}/examples/thundergbm
+      - url: https://github.com/ROCm/rocm-finance/tree/release/26.01/examples/thundergbm
         title: Examples
   - caption: About
     entries:
