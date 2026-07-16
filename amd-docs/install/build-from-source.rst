@@ -2,9 +2,9 @@
    :description: Build ThunderGBM with ROCm support from source for AMD GPUs
    :keywords: amd, rocm, finance, financial, fintech, algorithm, gpu, install, setup, env, docker, package, contribute, develop, build, pip, make
 
-*********************************
-Build ROCm ThunderGBM from source
-*********************************
+**************************************
+Build ThunderGBM on ROCm from source
+**************************************
 
 Prerequisites
 =============
@@ -12,11 +12,11 @@ Prerequisites
 Before proceeding, ensure that you have installed a supported ROCm version,
 operating system, and Python environment that are compatible with the ROCm
 Finance libraries. Verify that your system includes a supported AMD Instinct
-GPU. For guidance, see `ROCm finance installation prerequisites
+GPU. For guidance, see `AMD Finance installation prerequisites
 <https://rocm.docs.amd.com/projects/rocm-finance/en/latest/install/prerequisites.html>`__.
 
 For a consistent and streamlined setup experience, it's recommended to use
-a ROCm development environment Docker container. See `Install ROCm Finance
+a ROCm development environment Docker container. See `Install AMD Finance
 <https://rocm.docs.amd.com/projects/rocm-finance/en/latest/install/install.html>`__
 for instructions.
 
@@ -32,11 +32,11 @@ Build from source
       echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ noble main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
       apt-get update && apt-get install -y --no-install-recommends cmake
 
-2. Clone the `<https://github.com/ROCm/thundergbm>`__ source code from GitHub.
+2. Clone the `<https://github.com/AMD-Ecosystem/thundergbm>`__ source code from GitHub.
 
    .. code-block:: shell
 
-      git clone --recurse-submodules https://github.com/rocm/thundergbm.git
+      git clone --recurse-submodules https://github.com/AMD-Ecosystem/thundergbm.git
 
 3. Create and activate a Python virtual environment.
 
@@ -85,7 +85,7 @@ Build from source
          Name: amd_thundergbm
          Version: 0.3.16
          Summary: A Fast GBM Library on GPUs and CPUs with ROCm support
-         Home-page: https://github.com/rocm/thundergbm
+         Home-page: https://github.com/AMD-Ecosystem/thundergbm
          Author: Xtra Computing Group
 
 

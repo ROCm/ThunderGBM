@@ -12,13 +12,13 @@ Prerequisites
 =============
 
 Before proceeding, ensure that you have installed a supported ROCm version,
-operating system, and Python version that are compatible with the ROCm Finance
+operating system, and Python version that are compatible with the AMD Finance
 libraries. Verify that your system includes a supported AMD Instinct GPU For
-guidance, see `ROCm finance installation prerequisites
+guidance, see `AMD Finance installation prerequisites
 <https://rocm.docs.amd.com/projects/rocm-finance/en/latest/install/prerequisites.html>`__.
 
 For a consistent and streamlined setup experience, it's recommended to use
-a ROCm development environment Docker container. See `Install ROCm Finance
+a ROCm development environment Docker container. See `Install AMD Finance
 <https://rocm.docs.amd.com/projects/rocm-finance/en/latest/install/install.html>`__
 for instructions.
 
@@ -59,7 +59,7 @@ Use ``pip show`` to verify your installation:
       Name: amd_thundergbm
       Version: 0.3.16
       Summary: A Fast GBM Library on GPUs and CPUsi with ROCm support
-      Home-page: https://github.com/rocm/thundergbm
+      Home-page: https://github.com/AMD-Ecosystem/thundergbm
       ... [output truncated]
 
 After installing ThunderGBM, import and use the library. For example:
