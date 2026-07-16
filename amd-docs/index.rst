@@ -22,13 +22,11 @@ optimized kernels, efficient memory management, and seamless multi‑GPU scaling
 delivering substantial performance gains over CPU‑only baselines on massive,
 sparse datasets common in financial systems.
 
-ThunderGBM is part of the `ROCm-Finance toolkit
+ThunderGBM is part of the `AMD Finance toolkit
 <https://rocm.docs.amd.com/projects/rocm-finance/en/latest/>`__.
 
-The ROCm-Finance ThunderGBM source code is hosted on GitHub at
-`<https://github.com/ROCm/ThunderGBM/>`__.
-
-ROCm-Finance ThunderGBM documentation is organized into the following categories:
+The AMD Finance ThunderGBM source code is hosted on GitHub at
+`<https://github.com/AMD-Ecosystem/ThunderGBM/>`__.
 
 .. grid:: 2
    :gutter: 3
@@ -44,4 +42,4 @@ ROCm-Finance ThunderGBM documentation is organized into the following categories
 
    .. grid-item-card:: Tutorial
 
-      * `Examples (GitHub) <https://github.com/ROCm/rocm-finance/tree/release/26.01/examples/thundergbm>`__
+      * `Examples (GitHub) <https://github.com/AMD-Ecosystem/rocm-finance/tree/release/26.01/examples/thundergbm>`__
